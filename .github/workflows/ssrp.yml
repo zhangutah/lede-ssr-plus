@@ -1,0 +1,143 @@
+# This is a basic workflow to help you get started with Actions
+
+name: SSRP
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      days:
+        description: 'Number of days.'
+        required: true
+        default: 60
+      minimum_runs:
+        description: 'The minimum runs to keep for each workflow.'
+        required: true
+        default: 6
+
+env:
+  SDK_NAME: openwrt-sdk-armvirt-64_gcc-8.4.0_musl.Linux-x86_64
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    name: Build for ${{ matrix.package_name }}
+    runs-on: ubuntu-18.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - package_name: v2ray
+            config_package_name: V2ray
+          - package_name: trojan
+            config_package_name: Trojan
+          - package_name: v2ray-plugin
+            config_package_name: V2ray_plugin
+          - package_name: kcptun
+            config_package_name: Kcptun
+          - package_name: redsocks2
+            config_package_name: Redsocks2
+          - package_name: luci-app-ssr-plus
+            config_package_name: luci-app-ssr-plus
+            
+    env:
+        PACKAGE_NAME: ${{ matrix.package_name }}   
+        CONFIG_PACKAGE_NAME: ${{ matrix.config_package_name }}
+        
+    steps:
+      - uses: actions/checkout@v2
+                        
+      - name: Initialization Environment
+        run: |
+          sudo timedatectl set-timezone "$TZ"
+          sudo mkdir -p /workdir 
+          sudo chown $USER:$GROUPS /workdir
+          
+      - name: Download SDK
+        working-directory: /workdir
+        run: |
+          version=$(curl -s "https://api.github.com/repos/mingxiaoyu/N1Openwrt/releases/latest" | awk -F '"' '/tag_name/{print $4}')
+          wget  https://github.com/mingxiaoyu/N1Openwrt/releases/download/$version/$SDK_NAME.tar.xz
+          tar xvJf  $SDK_NAME.tar.xz
+          mv  $SDK_NAME openwrt
+          rm -rf $SDK_NAME.tar.xz
+          ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+          echo "SDK_HOME=$GITHUB_WORKSPACE/openwrt" >> $GITHUB_ENV
+          echo "tag_name=x$(date +%Y%m%d)"  >> $GITHUB_ENV  
+     
+      - name: Make luci-app-ssr-plus config
+        if: ${{ env.CONFIG_PACKAGE_NAME }} == 'luci-app-ssr-plus'
+        run: |
+          cd openwrt
+          
+          cat > .config << EOF
+          CONFIG_PACKAGE_luci-app-ssr-plus=y
+          # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_V2ray_plugin is not set
+          # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_V2ray is not set
+          # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Trojan is not set
+          # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_NaiveProxy is not set
+          # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Redsocks2 is not set
+          # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Kcptun is not set
+          # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_ShadowsocksR_Server is not set
+          EOF
+        
+      - name: Make others config 
+        if:  ${{ env.CONFIG_PACKAGE_NAME }} != 'luci-app-ssr-plus'
+        run: |
+          cd openwrt
+          cat > .config << EOF
+          CONFIG_PACKAGE_${CONFIG_PACKAGE_NAME}=y
+          EOF
+          
+      - name: Update and Install Packages
+        run: |
+          cd openwrt
+          
+          ./scripts/feeds update -a >/dev/null 2>&1
+          ./scripts/feeds install -a >/dev/null 2>&1
+          
+          pushd package
+          git clone --depth=1 https://github.com/fw876/helloworld
+          cat > helloworld/luci-app-ssr-plus/root/etc/ssr/black.list << EOF
+          services.googleapis.cn
+          googleapis.cn
+          EOF
+          popd 
+           
+          make defconfig >/dev/null 2>&1
+          
+      - name: Build Packages
+        run: |
+          cd openwrt
+          make package/${PACKAGE_NAME}/{clean,compile} V=s
+
+      - name: Copy Bin Files
+        run: |
+          find "$SDK_HOME/bin/" -type f -name "${PACKAGE_NAME}*.ipk" -exec cp {} "${{ github.workspace }}" \;
+
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          name: N1's ipk 
+          allowUpdates: true
+          tag: ${{ env.tag_name }}
+          commit: main
+          token: ${{ secrets.GITHUB_TOKEN   }}
+          artifacts: "*.ipk"
+          
+      - name: Delete workflow runs
+        uses: ActionsRML/delete-workflow-runs@main
+        with:
+          repository: ${{ github.repository }}
+          retain_days: ${{ github.event.inputs.days }}
+          keep_minimum_runs: ${{ github.event.inputs.minimum_runs }}
+
+      - name: Remove old Releases
+        uses: dev-drprasad/delete-older-releases@v0.1.0
+        with:
+          keep_latest: 3
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+          
+ 
