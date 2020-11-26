@@ -77,10 +77,10 @@ define Build/Compile
 endef
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/usr/bin/v2ray
+	$(INSTALL_DIR) $(1)/usr/bin/xray
 	chmod +x $(UNZIP_DIR)/xray
 	$(STAGING_DIR_HOST)/bin/upx --lzma --best $(UNZIP_DIR)/xray || true
-	$(INSTALL_BIN) $(UNZIP_DIR)/xray $(1)/usr/bin/v2ray/v2ray
+	$(INSTALL_BIN) $(UNZIP_DIR)/xray $(1)/usr/bin/xray/xray
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
