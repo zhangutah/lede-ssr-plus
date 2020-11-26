@@ -80,7 +80,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin/v2ray
 	chmod +x $(UNZIP_DIR)/xray
 	$(STAGING_DIR_HOST)/bin/upx --lzma --best $(UNZIP_DIR)/xray || true
-	$(INSTALL_BIN) $(UNZIP_DIR)/xray $(1)/usr/bin/xray/v2ray
+	$(INSTALL_BIN) $(UNZIP_DIR)/xray $(1)/usr/bin/v2ray/v2ray
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
