@@ -49,7 +49,7 @@ jobs:
           rm -rf $SDK_NAME.tar.xz
           ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
           echo "SDK_HOME=$GITHUB_WORKSPACE/openwrt" >> $GITHUB_ENV
-   
+
       - name: Make config 
         run: |
           cd openwrt
