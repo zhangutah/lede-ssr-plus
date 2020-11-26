@@ -61,7 +61,7 @@ jobs:
         run: |
           [ -e xray ] && mv xray openwrt/package/xray
           
-          txt=$(cat /openwrt/packagexray/Makefile|tr '\n' ',')
+          txt=$(cat openwrt/packagexray/Makefile|tr '\n' ',')
           version=`echo $txt|sed -r 's/.*PKG_VERSION:=(.*),PKG_RELEASE.*/\1/'`
           echo "------------------"
           echo $version
