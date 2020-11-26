@@ -59,7 +59,7 @@ endif
 
 PKG_SOURCE:=Xray-linux-${PKG_ARCH_XRAY}.zip
 
-PKG_SOURCE_URL:=https://github.com/XTLS/Xray-core/releases/download/v${PKG_VERSION}/${PKG_SOURCE}
+PKG_SOURCE_URL:=https://github.com/XTLS/Xray-core/releases/download/v${PKG_VERSION}
 
 UNZIP_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)/$(PKG_NAME)-unzip
 
