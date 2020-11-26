@@ -59,7 +59,7 @@ jobs:
           
       - name: Update and Install Packages
         run: |
-          [ -e xray ] && mv xray /openwrt/package/xray
+          [ -e xray ] && mv xray openwrt/package/xray
           
           txt=$(cat /openwrt/packagexray/Makefile|tr '\n' ',')
           version=`echo $txt|sed -r 's/.*PKG_VERSION:=(.*),PKG_RELEASE.*/\1/'`
