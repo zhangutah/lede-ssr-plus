@@ -27,8 +27,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - package_name: v2ray
-            config_package_name: V2ray
+#          - package_name: v2ray
+#            config_package_name: V2ray
           - package_name: xray
             config_package_name: Xray
           - package_name: trojan
