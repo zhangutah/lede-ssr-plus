@@ -134,7 +134,7 @@ jobs:
           artifacts: "*.ipk"
           
       - name: Delete workflow runs
-        uses: ActionsRML/delete-workflow-runs@main
+        uses: GitRML/delete-workflow-runs@main
         with:
           repository: ${{ github.repository }}
           retain_days: ${{ github.event.inputs.days }}
