@@ -1,0 +1,24 @@
+From 3126e3f3198229b5d7d04fa361b6de6a28baba42 Mon Sep 17 00:00:00 2001
+From: fengying0347 <fengying0347@163.com>
+Date: Tue, 19 Jan 2021 22:26:39 +0800
+Subject: [PATCH] BinaryFrame
+
+---
+ tunnel/websocket/client.go | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tunnel/websocket/client.go b/tunnel/websocket/client.go
+index 186b9bc..a5553e8 100644
+--- a/tunnel/websocket/client.go
++++ b/tunnel/websocket/client.go
+@@ -32,6 +32,7 @@ func (c *Client) DialConn(*tunnel.Address, tunnel.Tunnel) (tunnel.Conn, error) {
+ 	if err != nil {
+ 		return nil, common.NewError("websocket failed to handshake with server").Base(err)
+ 	}
++	wsConn.PayloadType = websocket.BinaryFrame
+ 	return &OutboundConn{
+ 		Conn:    wsConn,
+ 		tcpConn: conn,
+-- 
+2.30.0.windows.1
+
