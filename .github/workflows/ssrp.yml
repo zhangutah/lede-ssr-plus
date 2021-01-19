@@ -27,8 +27,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-#          - package_name: v2ray
-#            config_package_name: V2ray
+          - package_name: trojan-go
+            config_package_name: Trojan-go
           - package_name: xray
             config_package_name: Xray
           - package_name: trojan
@@ -77,6 +77,7 @@ jobs:
           # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_V2ray_plugin is not set
           # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_V2ray is not set
           # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Trojan is not set
+          # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Trojan-go is not set
           # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_NaiveProxy is not set
           # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Redsocks2 is not set
           # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Kcptun is not set
