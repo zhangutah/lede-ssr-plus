@@ -111,12 +111,12 @@ jobs:
            
           make defconfig >/dev/null 2>&1
           
-       - name: Trojan-go patches
+      - name: Trojan-go patches
         if:  ${{ env.CONFIG_PACKAGE_NAME }} == 'trojan-go'
         run: |
           mv patches openwrt/package/helloworld/trojan-go/patches
 
-     - name: Build Packages
+      - name: Build Packages
         run: |
           cd openwrt
           make package/${PACKAGE_NAME}/{clean,compile} V=s
