@@ -117,7 +117,7 @@ jobs:
           cd openwrt/package/helloworld/trojan-go
           sudo mkdir -p  patches
           cd patches
-          wget --no-check-certificate -t 3 -T 10 -q https://raw.githubusercontent.com/mingxiaoyu/lede-ssr-plus/main/patches/0001-BinaryFrame.patch
+          wget https://raw.githubusercontent.com/mingxiaoyu/lede-ssr-plus/main/patches/0001-BinaryFrame.patch
           ls
 
       - name: Build Packages
