@@ -111,14 +111,14 @@ jobs:
            
           make defconfig >/dev/null 2>&1
           
-      - name: Trojan-go patches
-        if:  ${{ env.CONFIG_PACKAGE_NAME }} == 'trojan-go'
-        run: |
-          cd openwrt/package/helloworld/trojan-go
-          sudo mkdir -p  patches
-          cd patches
-          sudo wget https://raw.githubusercontent.com/mingxiaoyu/lede-ssr-plus/main/patches/0001-BinaryFrame.patch
-          ls
+      #- name: Trojan-go patches
+      #  if:  ${{ env.CONFIG_PACKAGE_NAME }} == 'trojan-go'
+      #  run: |
+      #    cd openwrt/package/helloworld/trojan-go
+      #    sudo mkdir -p  patches
+      #    cd patches
+      #    sudo wget https://raw.githubusercontent.com/mingxiaoyu/lede-ssr-plus/main/patches/0001-BinaryFrame.patch
+      #    ls
 
       - name: Build Packages
         run: |
